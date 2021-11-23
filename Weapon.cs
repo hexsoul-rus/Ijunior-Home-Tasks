@@ -2,8 +2,8 @@ using System;
 
 class Weapon
 {
-    public int Bullets { get; private set; }
     private readonly int _damage, _maxBullets;
+    public int Bullets { get; private set; }
 
     public Weapon(int damage, int bullets)
     {
@@ -17,10 +17,10 @@ class Weapon
 
     public bool CheckLoad()
     {
-        bool isLoaded;
         if (Bullets > 0)
-            isLoaded = true;
-        return isLoaded;
+            return true;
+        else
+            return false;
     }
 
     public void Fire(Player player)
@@ -78,8 +78,13 @@ class Bot
         if (Weapon = null)
             throw new NullReferenceException(nameof(Weapon));
         if (Weapon.CheckLoad())
+        {
             Weapon.Fire(player);
+        }
         else
+        {
             Weapon.Reload();
+            Weapon.Fire(player);
+        }
     }
 }
