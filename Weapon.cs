@@ -77,14 +77,9 @@ class Bot
     {
         if (Weapon = null)
             throw new NullReferenceException(nameof(Weapon));
-        if (Weapon.CheckLoad())
-        {
-            Weapon.Fire(player);
-        }
-        else
-        {
+        if (Weapon.CheckLoad()==false)
             Weapon.Reload();
-            Weapon.Fire(player);
-        }
+        Weapon.Fire(player);
+   
     }
 }
