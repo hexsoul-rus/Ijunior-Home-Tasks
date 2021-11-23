@@ -2,69 +2,62 @@ using System;
 
 class Weapon
 {
-    private int _damage, _maxBullets;
     public int Bullets { get; private set; }
+    private readonly int _damage, _maxBullets;
 
     public Weapon(int damage, int bullets)
     {
-        if (bullets > 0 && damage > 0)
-        {
-            _maxBullets = Bullets = bullets;
-            _damage = damage;
-        }
-        else
-            throw new ArgumentOutOfRangeException();
+        if (bullets <= 0)
+            throw new ArgumentOutOfRangeException(nameof(bullets);
+        if (damage <= 0)
+            throw new ArgumentOutOfRangeException(nameof(damage));
+        _maxBullets = Bullets = bullets;
+        _damage = damage;   
     }
 
     public void Fire(Player player)
     {
-        if( Bullets > 0)
-        {
-            player?.TakeDamage(_damage):throw new NullReferenceException();
-            Bullets -= 1;
-        }
-        else
-            throw new InvalidOperationException();           
+        if (Bullets <= 0)
+            throw new InvalidOperationException();
+        player?.TakeDamage(_damage):throw new NullReferenceException(nameof(player));
+        Bullets -= 1;          
     }
 
     public void Reload()
     {
-            Bullets = _maxBullets;
+        Bullets = _maxBullets;
     }
 }
 
 class Player
 {
     public int Health { get; private set; }
-    public bool IsAlive { get; private set; }
+    public bool IsDead { get; private set; }
 
     public Player(int health)
     {
-        if (health > 0)
-        {
-            Health = health;
-            IsAlive = true;
-        }
-        else
-            throw new ArgumentOutOfRangeException();
+        if (health <= 0)
+            throw new ArgumentOutOfRangeException(nameof(health));
+        Health = health;      
     }
 
     public void TakeDamage(int damage)
     {
-        if (IsAlive && damage > 0)
-        {
-            Health -= damage;
-            if (Health < 0)
-                PlayerDeath();
-        }
-        else
+        if (IsDead)
             throw new InvalidOperationException();
+        if (damage <= 0)
+            throw new ArgumentOutOfRangeException(nameof(damage));
+        Health -= damage;
+        if (Health < 0)
+        {
+            Health = 0;
+            Dying();
+        }
     }
 
-    private void PlayerDeath()
-    {
-        Health = 0;
-        IsAlive = false;
+    private void Dying()
+    {    
+        IsDead = true;
     }
 }
 
@@ -74,12 +67,11 @@ class Bot
 
     public void OnSeePlayer(Player player)
     {
-        if (Weapon != null)
-            if (Weapon.Bullets > 0)
-                Weapon.Fire(player);
-            else
-                Weapon.Reload();
+        if (Weapon = null)
+            throw new NullReferenceException(nameof(Weapon));
+        if (Weapon.Bullets > 0)
+            Weapon.Fire(player);
         else
-            throw new NullReferenceException();
+            Weapon.Reload();
     }
 }
