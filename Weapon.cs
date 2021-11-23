@@ -7,30 +7,25 @@ class Weapon
 
     public Weapon(int damage, int bullets)
     {
-        _maxBullets = Bullets = bullets;
+        Bullets = bullets;
         _damage = damage;
-        if (CheckLoad() == false)
+        if (CheckBullets() == false)
             throw new ArgumentOutOfRangeException(nameof(bullets));
         if (damage <= 0)
             throw new ArgumentOutOfRangeException(nameof(damage));    
     }
 
-    public bool CheckLoad()
+    public bool CheckBullets()
     {
         return Bullets > 0;
     }
 
     public void Fire(Player player)
     {
-        if (CheckLoad() == false)
+        if (CheckBullets() == false)
             throw new InvalidOperationException();
         player?.TakeDamage(_damage):throw new NullReferenceException(nameof(player));
         Bullets -= 1;          
-    }
-
-    public void Reload()
-    {
-        Bullets = _maxBullets;
     }
 }
 
@@ -74,8 +69,6 @@ class Bot
     {
         if (Weapon = null)
             throw new NullReferenceException(nameof(Weapon));
-        if (Weapon.CheckLoad() == false)
-            Weapon.Reload();
         Weapon.Fire(player);
     }
 }
