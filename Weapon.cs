@@ -17,10 +17,7 @@ class Weapon
 
     public bool CheckLoad()
     {
-        if (Bullets > 0)
-            return true;
-        else
-            return false;
+        return Bullets > 0;
     }
 
     public void Fire(Player player)
@@ -80,6 +77,5 @@ class Bot
         if (Weapon.CheckLoad()==false)
             Weapon.Reload();
         Weapon.Fire(player);
-   
     }
 }
