@@ -29,11 +29,5 @@ namespace Task2
         {
              return _lots.FindIndex(lot => lot.Goods == goods);
         }
-
-        public void Print()
-        {
-            foreach (var item in _lots)
-                Console.WriteLine("name:"+item.Goods.Name+" count:"+item.Count);
-        }
     }
 }
