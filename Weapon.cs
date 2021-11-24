@@ -1,35 +1,45 @@
 using System;
 
-class Weapon
+public class Weapon
 {
-    private readonly int _damage, _maxBullets;
-    public int Bullets { get; private set; }
+    private readonly int _damage;
+    private int _bullets;
+    private bool _isCanFire;
 
     public Weapon(int damage, int bullets)
     {
-        Bullets = bullets;
+        _bullets = bullets;
         _damage = damage;
-        if (CheckBullets() == false)
-            throw new ArgumentOutOfRangeException(nameof(bullets));
         if (damage <= 0)
             throw new ArgumentOutOfRangeException(nameof(damage));    
     }
 
-    public bool CheckBullets()
-    {
-        return Bullets > 0;
-    }
-
     public void Fire(Player player)
     {
-        if (CheckBullets() == false)
-            throw new InvalidOperationException();
-        player?.TakeDamage(_damage):throw new NullReferenceException(nameof(player));
-        Bullets -= 1;          
+        if (_isCanFire)
+        {
+            _isCanFire = false;
+            _bullets = ReduceCount(_bullets);
+            player.TakeDamage(_damage);
+        }
+        else
+            throw new InvalidOperationException(nameof(_isCanFire));
+    }
+
+    public bool CanFire(Player player)
+    {
+        _isCanFire = ReduceCount(_bullets) >= 0;
+        _isCanFire &= player != null;
+        return _isCanFire;
+    }
+
+    private int ReduceCount(int count)
+    {
+        return count - 1;
     }
 }
 
-class Player
+public class Player
 {
     public int Health { get; private set; }
     public bool IsDead { get; private set; }
@@ -61,14 +71,22 @@ class Player
     }
 }
 
-class Bot
+public class Bot
 {
-    public Weapon Weapon;
+    private readonly Weapon _weapon;
+
+    public Bot(Weapon weapon)
+    {
+        if (weapon == null)
+            throw new NullReferenceException(nameof(weapon));
+        _weapon = weapon;
+    }
 
     public void OnSeePlayer(Player player)
     {
-        if (Weapon = null)
-            throw new NullReferenceException(nameof(Weapon));
-        Weapon.Fire(player);
+        if (_weapon.CanFire(player))
+            _weapon.Fire(player);
+        else
+            throw new InvalidOperationException();
     }
 }
