@@ -13,7 +13,13 @@ namespace Task2
             _warehouse = warehouse;
         }
 
-        public Order Order() => new Order(this);
+        public Order Order()
+        {
+            Order order = new Order(this);
+            WriteOff(_warehouse);
+            ClearList();
+            return order;
+        }
 
         public void Add(Goods goods, int count)
         {
@@ -22,7 +28,15 @@ namespace Task2
                 throw new InvalidOperationException();
             if (_warehouse.Lots[index].Count < count)
                 throw new InvalidOperationException();
-            AddToList(goods, count);
+            EditList(goods, count);
+        } 
+
+        private void WriteOff(LotsList list)
+        {
+            foreach (var item in Lots)
+            {
+                list.EditList(item.Goods, -item.Count);
+            }
         }
     }
 }

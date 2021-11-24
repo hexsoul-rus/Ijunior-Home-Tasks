@@ -4,7 +4,7 @@
     {
         public void Ship(Goods goods, int count)
         {
-            AddToList(goods, count);
+            EditList(goods, count);
         }
     }
 }

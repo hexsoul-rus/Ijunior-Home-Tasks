@@ -13,7 +13,7 @@ namespace Task2
             _lots = new List<Lot>();
         }
 
-        public void AddToList(Goods goods, int count)
+        public void EditList(Goods goods, int count)
         {
             if (goods == null)
                 throw new NullReferenceException(nameof(goods));
@@ -22,12 +22,21 @@ namespace Task2
             if (lotIndex == -1)
                 _lots.Add(newLot);
             else
+            {
                 _lots[lotIndex].Merge(newLot);
+                if (_lots[lotIndex].Count == 0)
+                    _lots.RemoveAt(lotIndex);
+            }
         }
 
         public int FindLotIndex(Goods goods)
         {
              return _lots.FindIndex(lot => lot.Goods == goods);
+        }
+
+        protected void ClearList()
+        {
+            _lots.Clear();
         }
     }
 }

@@ -9,9 +9,6 @@ namespace Task2
 
         public Lot(Goods goods, int count)
         {
-            if (count < 0)
-                throw new IndexOutOfRangeException(nameof(count));
-
             Goods = goods;
             Count = count;
         }
