@@ -86,7 +86,7 @@ public class PaymentSystem3 : IPaymentSystem
 
 public class HashSystem
 {
-    private iHashSystem _hashProvider;
+    private readonly iHashSystem _hashProvider;
 
     public HashSystem (iHashSystem hashProvider)
     {
