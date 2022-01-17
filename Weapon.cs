@@ -3,51 +3,44 @@ using System;
 public class Weapon
 {
     private readonly int _damage;
-    private int _bullets;
-    private bool _isCanFire;
+    private int _bulletsCount;
+    private int _bulletsPerShot;
 
-    public Weapon(int damage, int bullets)
+    public Weapon(int damage, int bulletsCount, int bulletsPerShot)
     {
-        _bullets = bullets;
-        _damage = damage;
         if (damage <= 0)
-            throw new ArgumentOutOfRangeException(nameof(damage));    
+            throw new ArgumentOutOfRangeException(nameof(damage));
+
+        _bulletsCount = bulletsCount;
+        _damage = damage;
+        _bulletsPerShot = bulletsPerShot;
     }
 
     public void Fire(Player player)
     {
-        if (_isCanFire)
-        {
-            _isCanFire = false;
-            _bullets = ReduceCount(_bullets);
-            player.TakeDamage(_damage);
-        }
-        else
-            throw new InvalidOperationException(nameof(_isCanFire));
+        if (CanFire(player) == false)
+            throw new InvalidOperationException();
+
+        _bulletsCount -= _bulletsPerShot;
+        player.TakeDamage(_damage);    
     }
 
     public bool CanFire(Player player)
     {
-        _isCanFire = ReduceCount(_bullets) >= 0;
-        _isCanFire &= player != null;
-        return _isCanFire;
-    }
-
-    private int ReduceCount(int count)
-    {
-        return count - 1;
+        return _bulletsCount - _bulletsPerShot >= 0 && player != null;
     }
 }
 
 public class Player
 {
     public int Health { get; private set; }
-    public bool IsDead { get; private set; }
+    private bool IsDead;
 
     public Player(int health)
     {
         if (health <= 0)
             throw new ArgumentOutOfRangeException(nameof(health));
+
         Health = health;      
     }
 
@@ -57,6 +50,7 @@ public class Player
             throw new InvalidOperationException();
         if (damage <= 0)
             throw new ArgumentOutOfRangeException(nameof(damage));
+
         Health -= damage;
         if (Health < 0)
         {
@@ -79,6 +73,7 @@ public class Bot
     {
         if (weapon == null)
             throw new NullReferenceException(nameof(weapon));
+
         _weapon = weapon;
     }
 
