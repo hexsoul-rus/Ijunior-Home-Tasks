@@ -8,58 +8,45 @@ namespace Lesson
         void WriteError(string message);
     }
 
-    class Program
+    abstract class LogWritter : ILogger
     {
-        static void Main(string[] args)
-        {
-            PathFinder log1 = new PathFinder(new FileLogWritter());
-            PathFinder log2 = new PathFinder(new ConsoleLogWritter());
-            PathFinder log3 = new PathFinder(new SecureConsoleLogWritter(new FileLogWritter()));
-            PathFinder log4 = new PathFinder(new SecureConsoleLogWritter(new ConsoleLogWritter()));
-            PathFinder log5 = new PathFinder(new ConsoleLogWritter(new SecureConsoleLogWritter(new FileLogWritter())));
+        private readonly ILogger _writter;
 
-        }
-    }
-
-    class PathFinder 
-    {
-        private ILogger _writter;
-
-        public PathFinder(ILogger writter)
-        {
-            if (_writter == null)
-                throw new ArgumentNullException(nameof(writter));
-            _writter = writter;
-        }
-
-        public void Find() => _writter.WriteError("some error");
-    }
-
-    class ConsoleLogWritter : ILogger
-    {
-        ILogger _writter;
-
-        public ConsoleLogWritter()
+        public LogWritter()
         {
             _writter = null;
         }
 
-        public ConsoleLogWritter(ILogger writter)
+        public LogWritter(ILogger writter)
         {
             _writter = writter;
         }
 
+        protected abstract void Output(string message);
+
         public void WriteError(string message)
         {
-            Console.WriteLine(message);
+            Output(message);
             if (_writter != null)
                 _writter.WriteError(message);
         }
     }
 
-    class FileLogWritter : ILogger
+    class ConsoleLogWritter : LogWritter
     {
-        public void WriteError(string message)
+        public ConsoleLogWritter() : base() { }
+        public ConsoleLogWritter(ILogger writter) : base(writter) { }
+        protected override void Output(string message)
+        {
+            Console.WriteLine(message);
+        }
+    }
+
+    class FileLogWritter : LogWritter
+    {
+        public FileLogWritter() : base() { }
+        public FileLogWritter(ILogger writter) : base(writter) { }
+        protected override void Output (string message)
         {
             File.WriteAllText("log.txt", message);
         }
@@ -67,10 +54,10 @@ namespace Lesson
 
     class SecureConsoleLogWritter : ILogger
     {
-        ILogger _writter;
+        private readonly ILogger _writter;
         public SecureConsoleLogWritter(ILogger writter)
         {
-            if (_writter == null)
+            if (writter == null)
                 throw new ArgumentNullException(nameof(writter));
             _writter = writter;
         }
@@ -80,6 +67,32 @@ namespace Lesson
             {
                 _writter.WriteError(message);
             }
+        }
+    }
+
+    class PathFinder
+    {
+        private readonly ILogger _writter;
+
+        public PathFinder(ILogger writter)
+        {
+            if (writter == null)
+                throw new ArgumentNullException(nameof(writter));
+            _writter = writter;
+        }
+
+        public void Find() => _writter.WriteError("some error");
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            PathFinder log1 = new PathFinder(new FileLogWritter());
+            PathFinder log2 = new PathFinder(new ConsoleLogWritter());
+            PathFinder log3 = new PathFinder(new SecureConsoleLogWritter(new FileLogWritter()));
+            PathFinder log4 = new PathFinder(new SecureConsoleLogWritter(new ConsoleLogWritter()));
+            PathFinder log5 = new PathFinder(new ConsoleLogWritter(new SecureConsoleLogWritter(new FileLogWritter())));
         }
     }
 }
