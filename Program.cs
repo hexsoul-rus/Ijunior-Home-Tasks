@@ -22,14 +22,14 @@ namespace Lesson
             _writter = writter;
         }
 
-        protected abstract void Output(string message);
-
         public void WriteError(string message)
         {
             Output(message);
             if (_writter != null)
                 _writter.WriteError(message);
         }
+
+        protected abstract void Output(string message);
     }
 
     class ConsoleLogWritter : LogWritter
