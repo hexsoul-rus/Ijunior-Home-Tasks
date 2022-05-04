@@ -6,7 +6,9 @@ namespace Task3Strings
     {
         static void Main(string[] args)
         {
-            string name, zodiac, work, yearSuffix;
+            string name;
+            string zodiac;
+            string work;
             byte age;
 
             Console.WriteLine("Как вас зовут?");
@@ -21,15 +23,7 @@ namespace Task3Strings
             Console.WriteLine("Где вы работаете?");
             work = Console.ReadLine();
             Console.Clear();
-
-            if (age % 10 > 4 || age % 10 == 0 || age < 20 && age > 10)
-                yearSuffix = "лет";
-            else if (age % 10 > 1)
-                yearSuffix = "года";
-            else
-                yearSuffix = "год";
-
-            Console.WriteLine($"Вас зовут {name}, вам {age} {yearSuffix}, вы {zodiac} и работаете {work}.");
+            Console.WriteLine($"Вас зовут {name}, вам {age} лет, вы {zodiac} и работаете {work}.");
             Console.ReadKey();
         }
     }
