@@ -6,17 +6,19 @@ namespace Task7Queue
     {
         static void Main(string[] args)
         {
-            byte receptionMinutesTime = 10;
-            byte hour = 60;
-            uint queueCount;
-            uint queueHoursTime;
-            uint queueMinutesTime;
+            byte receptionTimeInMinutes = 10;
+            byte minutesInHour = 60;
+            uint queueSize;
+            uint queueTimeInMinutes;
+            uint waitingHours;
+            uint waitingMinutes;
 
             Console.Write("Введите кол-во старушек: ");
-            queueCount = Convert.ToUInt32(Console.ReadLine());
-            queueHoursTime = queueCount * receptionMinutesTime / hour;
-            queueMinutesTime = queueCount * receptionMinutesTime % hour;
-            Console.WriteLine("Вы должны отстоять в очереди " + queueHoursTime + " часа и " + queueMinutesTime + " минут.");
+            queueSize = Convert.ToUInt32(Console.ReadLine());
+            queueTimeInMinutes = queueSize * receptionTimeInMinutes;
+            waitingHours = queueTimeInMinutes / minutesInHour;
+            waitingMinutes = queueTimeInMinutes % minutesInHour;
+            Console.WriteLine("Вы должны отстоять в очереди " + waitingHours + " часа и " + waitingMinutes + " минут.");
         }
     }
 }
