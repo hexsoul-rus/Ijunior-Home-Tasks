@@ -15,7 +15,7 @@ namespace Task11ValueSumm
             Random random = new Random();
             int randomValue = random.Next(minRandomValue, maxRandomValue);
 
-            for (int i = 0; i < randomValue; i++)
+            for (int i = 0; i <= randomValue; i++)
             {
                 if(i % targetValue1 == 0 || i % targetValue2 == 0)
                 {
