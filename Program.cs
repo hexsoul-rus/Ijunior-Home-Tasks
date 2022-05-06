@@ -6,27 +6,24 @@ namespace Task11ValueSumm
     {
         static void Main(string[] args)
         {
-            int minRandomValue = - 100;
+            int minRandomValue = 0;
             int maxRandomValue = 100;
-            uint valuesCount = 20;
             int targetValue1 = 3;
             int targetValue2 = 5;
             int valuesSumm = 0;
-            int randomValue;
+
             Random random = new Random();
+            int randomValue = random.Next(minRandomValue, maxRandomValue);
 
-            for(int i = 0; i < valuesCount; i++)
+            for (int i = 0; i < randomValue; i++)
             {
-                randomValue = random.Next(minRandomValue, maxRandomValue);
-                Console.Write(randomValue + " ");
-
-                if(randomValue > 0 && (randomValue % targetValue1 == 0 || randomValue % targetValue2 == 0))
+                if(i % targetValue1 == 0 || i % targetValue2 == 0)
                 {
-                    valuesSumm += randomValue;
+                    valuesSumm += i;
                 }
             }
-            Console.WriteLine();
-            Console.WriteLine("Сумма положительных, кратных 3 и 5 чисел = " + valuesSumm);
+
+            Console.WriteLine("Сумма всех положительных чисел меньше или равных " + randomValue + ", кратных 3 и 5 = " + valuesSumm);
         }
     }
 }
