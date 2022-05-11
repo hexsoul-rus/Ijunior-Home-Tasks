@@ -18,9 +18,11 @@ namespace Task12Converter
             float convertionValue;
             string commandLine;
             string exitCommand = "exit";
+            bool isConverted;
 
             do
             {
+                isConverted = false;
                 commandLine = "";
                 Console.WriteLine($"Текущий баланс USD:{usdBalance} EUR:{eurBalance} GBP:{gbpBalance}");
                 Console.WriteLine("Что будем конвертировать?\n1.USD\n2.EUR\n3.GBP");
@@ -30,38 +32,69 @@ namespace Task12Converter
                 Console.WriteLine("Сколько будем конвертировать?");
                 convertionValue = Convert.ToSingle(Console.ReadLine());
 
+                if (convertionValue < 0)
+                    commandLine = "";
+
                 switch (commandLine)
                 {
                     case "12":
-                        usdBalance -= convertionValue;
-                        eurBalance += convertionValue * usdToEur;
+                        if (convertionValue <= usdBalance)
+                        {
+                            usdBalance -= convertionValue;
+                            eurBalance += convertionValue * usdToEur;
+                            isConverted = true;
+                        }
                         break;
                     case "13":
-                        usdBalance -= convertionValue;
-                        gbpBalance += convertionValue + usdToGbp;
+                        if (convertionValue <= usdBalance)
+                        {
+                            usdBalance -= convertionValue;
+                            gbpBalance += convertionValue * usdToGbp;
+                            isConverted = true;
+                        }
                         break;
                     case "21":
-                        eurBalance -= convertionValue;
-                        usdBalance += convertionValue * eurToUsd;
+                        if (convertionValue <= eurBalance)
+                        {
+                            eurBalance -= convertionValue;
+                            usdBalance += convertionValue * eurToUsd;
+                            isConverted = true;
+                        }
                         break;
                     case "23":
-                        eurBalance -= convertionValue;
-                        gbpBalance += convertionValue + eurToGbp;
+                        if (convertionValue <= eurBalance)
+                        {
+                            eurBalance -= convertionValue;
+                            gbpBalance += convertionValue * eurToGbp;
+                            isConverted = true;
+                        }
                         break;
                     case "31":
-                        gbpBalance -= convertionValue;
-                        usdBalance += convertionValue * gbpToUsd;
+                        if (convertionValue <= gbpBalance)
+                        {
+                            gbpBalance -= convertionValue;
+                            usdBalance += convertionValue * gbpToUsd;
+                            isConverted = true;
+                        }
                         break;
                     case "32":
-                        gbpBalance -= convertionValue;
-                        eurBalance += convertionValue + gbpToEur;
+                        if (convertionValue <= gbpBalance)
+                        {
+                            gbpBalance -= convertionValue;
+                            eurBalance += convertionValue * gbpToEur;
+                            isConverted = true;
+                        }
                         break;
                     default:
                         Console.WriteLine("Неверный ввод.");
                         break;
                 }
 
-                Console.WriteLine($"Баланс после конвертации USD:{usdBalance} EUR:{eurBalance} GBP:{gbpBalance}");
+                if (isConverted)
+                    Console.WriteLine($"Баланс после конвертации USD:{usdBalance} EUR:{eurBalance} GBP:{gbpBalance}");
+                else
+                    Console.WriteLine("Недостаточно средств.");
+
                 Console.Write("Введите " + exitCommand + " для выхода: ");
                 commandLine = Console.ReadLine();
                 Console.Clear();
