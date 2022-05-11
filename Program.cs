@@ -6,6 +6,7 @@ namespace Task14NameEnter
     {
         static void Main(string[] args)
         {
+            byte verticalBordersCount = 2;
             string nameLine;
             char borderSymbol;
             int borderWidth = 1;
@@ -15,9 +16,9 @@ namespace Task14NameEnter
             Console.Write("Введите символ: ");
             borderSymbol = Console.ReadLine()[0];
 
-            for (int i = 0; i <= borderWidth * 2; i++)
+            for (int i = 0; i <= borderWidth * verticalBordersCount; i++)
             {
-                for (int j = 0; j < nameLine.Length + borderWidth * 2; j++)
+                for (int j = 0; j < nameLine.Length + borderWidth * verticalBordersCount; j++)
                 {
                     if (i == borderWidth && j >= borderWidth && j < borderWidth + nameLine.Length)
                         Console.Write(nameLine[j - borderWidth]);
