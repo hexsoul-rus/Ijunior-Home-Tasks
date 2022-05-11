@@ -15,6 +15,7 @@ namespace Task13Console
 
             Console.WriteLine();
         }
+
         static void Main(string[] args)
         {
             const string exitCommand = "exit";
