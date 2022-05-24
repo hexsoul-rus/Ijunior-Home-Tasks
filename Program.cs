@@ -7,10 +7,8 @@ namespace Task23DynamicArray
         static void Main(string[] args)
         {
             string commandLine;
-            int index = 0;
-            int arrayIncreaseValue = 1;
             int arrayValuesSum;
-            int[] array = new int[1];
+            int[] array = new int[0];
 
             do
             {
@@ -31,20 +29,15 @@ namespace Task23DynamicArray
                 }
                 else if (int.TryParse(commandLine, out int value))
                 {
-                    if (index >= array.Length)
+                    int[] tempArray = new int[array.Length + 1];
+
+                    for (int i = 0; i < array.Length; i++)
                     {
-                        int[] tempArray = new int[index + arrayIncreaseValue];
-
-                        for (int i = 0; i < array.Length; i++)
-                        {
-                            tempArray[i] = array[i];
-                        }
-
-                        array = tempArray;
+                        tempArray[i] = array[i];
                     }
 
-                    array[index] = value;
-                    index++;
+                    array = tempArray;
+                    array[array.Length - 1] = value;
                 }
             }
             while (commandLine.ToLower() != "exit");
