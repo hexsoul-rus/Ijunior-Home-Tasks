@@ -6,13 +6,12 @@ namespace Task28PersonnelAccounting
     {
         static void Main(string[] args)
         {
-            string[] jobTitle = new string[0];
-            string[] fullName = new string[0];
-            int arrayLength;
+            string[] jobTitles = new string[0];
+            string[] fullNames = new string[0];
             string commandLine = "";
-            bool isntExit = true;
+            bool isWork = true;
 
-            while (isntExit)
+            while (isWork)
             {
                 Console.WriteLine("1.добавить сотрудника\n2.вывести список сотрудников\n3.удалить сотрудника\n4.найти сотрудника по фамилии\n5.выход\nВведите номер комманды");
                 commandLine = Console.ReadLine();
@@ -20,62 +19,82 @@ namespace Task28PersonnelAccounting
                 switch (commandLine)
                 {
                     case "1":
-                        Console.WriteLine("Введите ФИО: ");
-                        string addedFullName = Console.ReadLine();
-                        Console.WriteLine("Введите должность: ");
-                        string addedJobTitle = Console.ReadLine();
-                        AddAccount(ref fullName, ref jobTitle, addedFullName, addedJobTitle);
+                        AddAccount(ref fullNames, ref jobTitles);
                         break;
                     case "2":
-                        for (int i = 0; i < fullName.Length; i++)
-                            Console.WriteLine($"{i+1}.{fullName[i]}-{jobTitle[i]}");
-
-                        Console.ReadKey();
+                        for (int i = 0; i < fullNames.Length; i++)
+                            Console.WriteLine($"{i + 1}.{fullNames[i]} - {jobTitles[i]}");
                         break;
                     case "3":
-                        Console.WriteLine("Введите индекс удаляемого сотрудника: ");
-                        commandLine = Console.ReadLine();
-                        arrayLength = fullName.Length;
-                        DelleteAccount(ref fullName, ref jobTitle, Convert.ToInt32(commandLine)-1);
-
-                        if (arrayLength == fullName.Length)
-                            Console.WriteLine($"Не удалось удалить сотрудника с индексом {commandLine}");
-                        else
-                            Console.WriteLine($"Сотрудник с индексом {commandLine} был успешно удалён");
-
-                        Console.ReadKey();
-                            break;
+                        DelleteAccount(ref fullNames, ref jobTitles);
+                        break;
                     case "4":
-                        Console.WriteLine("Введите фамилию: ");
-                        commandLine = Console.ReadLine();
-                        int[] findedIndexes = FindIndexesBySurname(fullName, commandLine);
-                        Console.WriteLine($"Найдено {findedIndexes.Length} сотрудников с фамилией {commandLine}");
-
-                        foreach (int i in findedIndexes)
-                            Console.WriteLine($"{i+1}.{fullName[i]}-{jobTitle[i]}");
-
-                        Console.ReadKey();
+                        FindAccounts(fullNames, jobTitles);
                         break;
                     case "5":
-                        isntExit = false;
+                        isWork = false;
                         break;
                 }
-                Console.Clear();
+
+                if (isWork)
+                {
+                    Console.WriteLine("Для продолжения нажмите любую клавишу");
+                    Console.ReadKey();
+                    Console.Clear();
+                }
             }
         }
 
-        static void AddAccount(ref string[] fullName, ref string[] jobTitle, string addedFullName, string addedJobTitle)
+        static void AddAccount(ref string[] fullName, ref string[] jobTitle)
         {
-            Array.Resize(ref fullName, fullName.Length + 1);
-            Array.Resize(ref jobTitle, jobTitle.Length + 1);
-            fullName[fullName.Length - 1] = addedFullName;
-            jobTitle[jobTitle.Length - 1] = addedJobTitle;
+            Console.WriteLine("Введите ФИО: ");
+            string addedFullName = Console.ReadLine();
+            Console.WriteLine("Введите должность: ");
+            string addedJobTitle = Console.ReadLine();
+            fullName=AddArrayElement(fullName, addedFullName);
+            jobTitle=AddArrayElement(jobTitle, addedJobTitle);
+            Console.WriteLine("Сотрудник добавлен");
         }
 
-        static void DelleteAccount(ref string[] fullName, ref string[] jobTitle, int index)
+        static void DelleteAccount(ref string[] fullNames, ref string[] jobTitles)
         {
-                fullName = DeleteArrayElement(fullName, index);
-                jobTitle = DeleteArrayElement(jobTitle, index);
+            int arrayLength = fullNames.Length;
+            int index;
+
+            Console.WriteLine("Введите индекс удаляемого сотрудника: ");
+            index = Convert.ToInt32(Console.ReadLine());
+            fullNames = DeleteArrayElement(fullNames, index-1);
+            jobTitles = DeleteArrayElement(jobTitles, index-1);
+
+            if (arrayLength == fullNames.Length)
+                Console.WriteLine($"Не удалось удалить сотрудника с индексом {index}");
+            else
+                Console.WriteLine($"Сотрудник с индексом {index} был успешно удалён");
+        }
+
+        static void FindAccounts(string[] fullNames, string[] jobTitles)
+        {
+            string surname;
+
+            Console.WriteLine("Введите фамилию: ");
+            surname = Console.ReadLine();
+
+            for (int i = 0;i < fullNames.Length;i++)
+            {
+                if(fullNames[i].Split(' ')[0].ToLower() == surname.ToLower())
+                    Console.WriteLine($"{i+1} {fullNames[i]} - {jobTitles[i]}");    
+            }
+        }
+
+        static string[] AddArrayElement(string[] array, string element)
+        {
+            string[] tempArray = new string[array.Length + 1];
+
+            for (int i = 0; i < array.Length; i++)
+                tempArray[i] = array[i];
+
+            tempArray[array.Length] = element;
+            return tempArray;
         }
 
         private static string[] DeleteArrayElement(string[] array, int index)
@@ -92,23 +111,8 @@ namespace Task28PersonnelAccounting
 
                 array = tempArray;
             }
+
             return array;
-        }
-
-        static int[] FindIndexesBySurname(string[] fullName, string surname)
-        {
-            int[] indexes = new int[0];
-
-            for (int i = 0;i < fullName.Length;i++)
-            {
-                if(fullName[i].Split(' ')[0].ToLower() == surname.ToLower())
-                {
-                    Array.Resize(ref indexes, indexes.Length + 1);
-                    indexes[indexes.Length - 1] = i;
-                }    
-            }
-
-            return indexes;
         }
     }
 }
