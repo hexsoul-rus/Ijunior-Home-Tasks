@@ -18,8 +18,9 @@ namespace Task29UIElement
 
         static void DrawUIBar(int fillPercent, ConsoleColor fillColor, int leftPosition, int topPosition, int barLength, char fillSymbol = '#', char emptySpaceSymbol = '-')
         {
+            float percentMaxValue = 100;
             ConsoleColor defaultColor = Console.BackgroundColor;
-            int fill = Convert.ToInt32(barLength / 100f * fillPercent);
+            int fill = Convert.ToInt32(barLength / percentMaxValue * fillPercent);
 
             Console.SetCursorPosition(leftPosition, topPosition);
             Console.Write("[");
