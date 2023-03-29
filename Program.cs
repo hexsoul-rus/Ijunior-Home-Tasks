@@ -4,29 +4,28 @@ namespace Task32Shuffle
 {
     internal class Program
     {
-        static void ShuffleArray(int[] array)
+        static void ShuffleArray(int[] numbers)
         {
             Random random = new();
 
-            for (int i = 0; i < array.Length - 1; i++)
+            for (int i = 0; i < numbers.Length - 1; i++)
             {
-                int randomIndex = random.Next(i + 1, array.Length - 1);
-                int tmp = array[randomIndex];
-                array[randomIndex] = array[i];
-                array[i] = tmp;
+                int randomIndex = random.Next(i + 1, numbers.Length - 1);
+                int temporaryNumber = numbers[randomIndex];
+                numbers[randomIndex] = numbers[i];
+                numbers[i] = temporaryNumber;
             }
         }
 
         static void Main()
         {
-            int[] array = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 };
+            int[] numbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 };
 
-            ShuffleArray(array);
-
-            for (int i = 0; i < array.Length; i++)
-            {
-                Console.Write(array[i] + " ");
-            }
+            string numbersLine = string.Join(" ", numbers);
+            Console.WriteLine("Normal: " + numbersLine);
+            ShuffleArray(numbers);
+            numbersLine = string.Join(" ", numbers);
+            Console.Write("Shuffle: " + numbersLine);
         }
     }
 }
