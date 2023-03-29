@@ -11,19 +11,24 @@ namespace Task33Dictionary
             {
                 { "кринж", "Нечто жуткое, отвратительное."},
                 { "рофл", "ROFL [аббревиатура] ... кататься на полу от смеха"},
-                { "вайб", "Особенное настроение, атмосфера"},
-                { "выход", "Хорошего дня!!!" }
+                { "вайб", "Особенное настроение, атмосфера"}
             };
             string word;
+            bool isExit = false;
 
             do
             {
                 Console.WriteLine("Введите слово, чтоб узнать его значение или Выход для завершения.");
-                word = Console.ReadLine();
-                word = word.ToLower();
-                Console.WriteLine(dictionary.ContainsKey(word) ? dictionary[word] : "Нет такого слова в словаре ");
+                word = Console.ReadLine().ToLower();
+
+                if (word == "выход")
+                    isExit = true;
+                else if (dictionary.ContainsKey(word))
+                    Console.WriteLine(dictionary[word]);
+                else
+                    Console.WriteLine("Нет такого слова в словаре.");
             }
-            while(word != "Exit");
+            while(isExit == false);
         }
     }
 }
