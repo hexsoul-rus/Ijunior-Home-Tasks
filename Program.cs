@@ -8,25 +8,25 @@ namespace Task34ShopQueue
         static void Main()
         {
             int totalRevenue = 0;
-            Queue<int> buyersSums = new();
+            Queue<int> buyers = new();
 
-            buyersSums.Enqueue(59);
-            buyersSums.Enqueue(45);
-            buyersSums.Enqueue(155);
-            buyersSums.Enqueue(67);
-            buyersSums.Enqueue(15);
+            buyers.Enqueue(59);
+            buyers.Enqueue(45);
+            buyers.Enqueue(155);
+            buyers.Enqueue(67);
+            buyers.Enqueue(15);
 
-            while (buyersSums.Count > 0)
+            while (buyers.Count > 0)
             {
                 Console.Write("Суммы покупок в очереди клиентов: ");
 
-                foreach (var item in buyersSums)
+                foreach (var buyer in buyers)
                 {
-                    Console.Write(item + "  ");
+                    Console.Write(buyer + "  ");
                 }
 
-                Console.WriteLine("\nСумма текущей покупки: " + buyersSums.Peek());
-                totalRevenue += buyersSums.Dequeue();
+                Console.WriteLine("\nСумма текущей покупки: " + buyers.Peek());
+                totalRevenue += buyers.Dequeue();
                 Console.WriteLine("Общая выручка: " + totalRevenue);
                 Console.WriteLine("Нажмите любую клавишу, чтоб продолжить.");
                 Console.ReadKey();
