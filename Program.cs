@@ -7,10 +7,11 @@ namespace Task35ExtendedDynamicArray
     {
         static void Main()
         {
-            string commandLine;
-            int ValuesSum;
             bool isExit = false;
-            List<int> Values = new();
+            string commandLine;
+            string sumCommand = "sum";
+            string exitCommand = "exit";
+            List<int> values = new();
 
             while (isExit == false)
             {
@@ -18,22 +19,23 @@ namespace Task35ExtendedDynamicArray
                 commandLine = Console.ReadLine().ToLower();
                 Console.Clear();
 
-                if (commandLine == "sum")
-                {
-                    ValuesSum = 0;
-
-                    foreach (int value in Values)
-                    {
-                        ValuesSum += value;
-                    }
-
-                    Console.WriteLine("Сумма введённых чисел = " + ValuesSum);
-                }
-                else if (commandLine == "exit")
+                if (commandLine == sumCommand)
+                    Console.WriteLine("Сумма введённых чисел = " + SumValues(values));
+                else if (commandLine == exitCommand)
                     isExit = true;
                 else if (int.TryParse(commandLine, out int value))
-                    Values.Add(value);
+                    values.Add(value);
             } 
+        }
+
+        static int SumValues(List<int> values)
+        {
+            int valuesSum = 0;
+
+            foreach (int value in values)
+                valuesSum += value;
+
+            return valuesSum;
         }
     }
 }
