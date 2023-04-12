@@ -7,28 +7,28 @@ namespace Task35ExtendedDynamicArray
     {
         static void Main()
         {
-            bool isExit = false;
+            bool isRunning = true;
             string commandLine;
             string sumCommand = "sum";
             string exitCommand = "exit";
             List<int> values = new();
 
-            while (isExit == false)
+            while (isRunning)
             {
-                Console.WriteLine("Введите целое число, чтобы добавить его в список; sum - вычисления суммы элементов списка; exit - выход.");
+                Console.WriteLine($"Введите целое число, чтобы добавить его в список; {sumCommand} - вычисления суммы элементов списка; {exitCommand} - выход."); ;
                 commandLine = Console.ReadLine().ToLower();
                 Console.Clear();
 
                 if (commandLine == sumCommand)
-                    WriteSumToConsole(values);
+                    ShowSum(values);
                 else if (commandLine == exitCommand)
-                    isExit = true;
+                    isRunning = false;
                 else if (int.TryParse(commandLine, out int value))
                     values.Add(value);
             } 
         }
 
-        static void WriteSumToConsole(List<int> values)
+        static void ShowSum(List<int> values)
         {
             int valuesSum = 0;
 
