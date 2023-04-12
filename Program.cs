@@ -20,7 +20,7 @@ namespace Task35ExtendedDynamicArray
                 Console.Clear();
 
                 if (commandLine == sumCommand)
-                    Console.WriteLine("Сумма введённых чисел = " + SumValues(values));
+                    WriteSumToConsole(values);
                 else if (commandLine == exitCommand)
                     isExit = true;
                 else if (int.TryParse(commandLine, out int value))
@@ -28,14 +28,14 @@ namespace Task35ExtendedDynamicArray
             } 
         }
 
-        static int SumValues(List<int> values)
+        static void WriteSumToConsole(List<int> values)
         {
             int valuesSum = 0;
 
             foreach (int value in values)
                 valuesSum += value;
 
-            return valuesSum;
+            Console.WriteLine("Сумма введённых чисел = " + valuesSum);
         }
     }
 }
