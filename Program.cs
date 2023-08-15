@@ -1,38 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using static System.Net.WebRequestMethods;
 
 namespace Task36ExtendedAccounting
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            const char CommandAdd = '1';
-            const char CommandPrint = '2';
-            const char CommandDelete = '3';
+            const char CommandAddAccount = '1';
+            const char CommandPrintAccount = '2';
+            const char CommandDeleteAccount = '3';
             const char CommandExit = '4';
-            Dictionary<int, string> fullNames = new Dictionary<int, string>();
-            Dictionary<int, string> jobTitles = new Dictionary<int, string>();
+
+            Dictionary<string, string> accounts = new();
             bool isWorking = true;
 
             while (isWorking)
             {
-                Console.WriteLine($"Выберите действие:\n{CommandAdd}-Добавить досье\n{CommandPrint}-Вывести досье\n{CommandDelete}-Удалить досье\n{CommandExit}-Выход");
-                char Key = Console.ReadKey().KeyChar;
+                Console.WriteLine($"Выберите действие:\n{CommandAddAccount}-Добавить досье\n{CommandPrintAccount}-Вывести досье\n{CommandDeleteAccount}-Удалить досье\n{CommandExit}-Выход");
+                char key = Console.ReadKey().KeyChar;
                 Console.WriteLine();
 
-                switch (Key)
+                switch (key)
                 {
-                    case CommandAdd:
-                        AddAccount(fullNames, jobTitles);
+                    case CommandAddAccount:
+                        AddAccount(accounts);
                         break;
 
-                    case CommandPrint:
-                        PrintAccounts(fullNames, jobTitles);
+                    case CommandPrintAccount:
+                        PrintAccounts(accounts);
                         break;
 
-                    case CommandDelete:
-                        DeleteAccount(fullNames, jobTitles);
+                    case CommandDeleteAccount:
+                        DeleteAccount(accounts);
                         break;
 
                     case CommandExit:
@@ -53,69 +54,50 @@ namespace Task36ExtendedAccounting
             }
         }
 
-        static void AddAccount(Dictionary<int, string> fullNames, Dictionary<int, string> jobTitles)
+        static void AddAccount(Dictionary<string, string> accounts)
         {
-            int accountIndex = GetAccountIndex(fullNames, out bool isCorrect, out bool isExist);
-            string fullName;
-            string jobTitle;
+            Console.Write("Введите ФИО: ");
+            string fullName = Console.ReadLine();
+            Console.Write("Введите должность: ");
+            string jobTitle = Console.ReadLine();              
 
-            if (isCorrect)
+            if (fullName != "" && jobTitle != "") 
             {
-                if (isExist == false)
+                if(accounts.ContainsKey(fullName)) 
                 {
-                    Console.Write("Введите ФИО: ");
-                    fullName = Console.ReadLine();
-                    Console.Write("Введите должность: ");
-                    jobTitle = Console.ReadLine();              
-                    fullNames.Add(accountIndex, fullName);
-                    jobTitles.Add(accountIndex, jobTitle);
+                    Console.WriteLine("Досье с таким ФИО уже существует");
                 }
                 else
                 {
-                    Console.WriteLine("Досье с таким номером уже существует");
+                    accounts.Add(fullName, jobTitle);
                 }
             }
-        }
-
-        static void PrintAccounts(Dictionary<int, string> fullNames, Dictionary<int, string> jobTitles)
-        {
-            foreach (var fullName in fullNames)
+            else
             {
-                Console.WriteLine($"{fullName.Key} {fullName.Value} - {jobTitles[fullName.Key]}");
+                Console.WriteLine("Ввод не коректен");
             }
         }
 
-        static void DeleteAccount(Dictionary<int, string> fullNames, Dictionary<int, string> jobTitles)
+        static void PrintAccounts(Dictionary<string, string> accounts)
         {
-            int accountIndex = GetAccountIndex(fullNames, out bool isCorrect, out bool isExist);
-
-            if (isExist)
+            foreach (var account in accounts)
             {
-                fullNames.Remove(accountIndex);
-                jobTitles.Remove(accountIndex);
+                Console.WriteLine($"{account.Key} - {account.Value}");
+            }
+        }
+
+        static void DeleteAccount(Dictionary<string, string> accounts)
+        {
+            Console.WriteLine("Введите ФИО");
+            string fullName = Console.ReadLine();
+
+            if (accounts.ContainsKey(fullName))
+            {
+                accounts.Remove(fullName);
             }
             else
             {
-                Console.WriteLine("Не существует досье с таким номером");
-            }
-        }
-
-        static int GetAccountIndex(Dictionary<int, string> accounts, out bool isCorrect, out bool isExist)
-        {
-            int accountIndex;
-            Console.Write("Введите номер досье: ");
-            isCorrect = Int32.TryParse(Console.ReadLine(), out accountIndex);
-
-            if (isCorrect)
-            {
-                isExist = accounts.TryGetValue(accountIndex, out var account);
-                return accountIndex;
-            }
-            else
-            {
-                Console.WriteLine("Неверно указан номер досье");
-                isExist = false;
-                return 0;
+                Console.WriteLine("Не существует досье с таким ФИО");
             }
         }
     }
