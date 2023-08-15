@@ -22,16 +22,15 @@ namespace Task37MergingCollections
 
         private static void WriteCollectionToConsole(string[] strings)
         {
-
-            foreach (string item in strings)
-                Console.Write(item + " ");
+            foreach (string value in strings)
+                Console.Write(value + " ");
         }
 
         static void AddUniqueStrings(String[] targetStrings, List<string> uniqueStrings)
         {
-            foreach(string item in targetStrings)
-                if (uniqueStrings.Contains(item) == false)
-                    uniqueStrings.Add(item);
+            foreach(string value in targetStrings)
+                if (uniqueStrings.Contains(value) == false)
+                    uniqueStrings.Add(value);
         }
     }
 }
