@@ -1,50 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace Task36ExtendedAccounting
+namespace Task28PersonnelAccounting
 {
-    public class Account
-    {
-        public string LastName;
-        public string FirstName;
-        public string FatherName;
-        public int JobTitleIndex;
-    }
-
-    class Program
+    internal class Program
     {
         static void Main(string[] args)
         {
-            Dictionary<int, Account> accounts = new Dictionary<int, Account>();
-            List<string> jobTitles = new List<string>();
-            bool isWorking = true;
+            string[] jobTitles = new string[0];
+            string[] fullNames = new string[0];
+            string commandLine = "";
+            bool isWork = true;
 
-            while (isWorking)
+            while (isWork)
             {
-                Console.WriteLine("Выберите действие:\n1-Добавить досье\n2-Вывести досье\n3-Удалить досье\n4-Выход");
-                char Key = Console.ReadKey().KeyChar;
-                Console.WriteLine();
+                Console.WriteLine("1.добавить сотрудника\n2.вывести список сотрудников\n3.удалить сотрудника\n4.найти сотрудника по фамилии\n5.выход\nВведите номер комманды");
+                commandLine = Console.ReadLine();
 
-                switch (Key)
+                switch (commandLine)
                 {
-                    case '1':
-                        AddAccount(accounts, jobTitles);
+                    case "1":
+                        AddAccount(ref fullNames, ref jobTitles);
                         break;
-                    case '2':
-                        PrintAccounts(accounts, jobTitles);
+                    case "2":
+                        for (int i = 0; i < fullNames.Length; i++)
+                            Console.WriteLine($"{i + 1}.{fullNames[i]} - {jobTitles[i]}");
                         break;
-                    case '3':
-                        DeleteAccount(accounts);
+                    case "3":
+                        DelleteAccount(ref fullNames, ref jobTitles);
                         break;
-                    case '4':
-                        isWorking = false;
+                    case "4":
+                        FindAccounts(fullNames, jobTitles);
                         break;
-                    default:
-                        Console.WriteLine("Некорректный ввод");
+                    case "5":
+                        isWork = false;
                         break;
                 }
 
-                if (isWorking)
+                if (isWork)
                 {
                     Console.WriteLine("Для продолжения нажмите любую клавишу");
                     Console.ReadKey();
@@ -53,85 +45,74 @@ namespace Task36ExtendedAccounting
             }
         }
 
-        static void AddAccount(Dictionary<int, Account> accounts, List<string> jobTitles)
+        static void AddAccount(ref string[] fullName, ref string[] jobTitle)
         {
-            int accountIndex = GetAccountIndex(accounts, out bool isCorrect, out bool isExist);
-            string jobTitle;
-            int jobTitleIndex;
+            Console.WriteLine("Введите ФИО: ");
+            string addedFullName = Console.ReadLine();
+            Console.WriteLine("Введите должность: ");
+            string addedJobTitle = Console.ReadLine();
+            fullName=AddArrayElement(fullName, addedFullName);
+            jobTitle=AddArrayElement(jobTitle, addedJobTitle);
+            Console.WriteLine("Сотрудник добавлен");
+        }
 
-            if (isCorrect)
+        static void DelleteAccount(ref string[] fullNames, ref string[] jobTitles)
+        {
+            int arrayLength = fullNames.Length;
+            int index;
+
+            Console.WriteLine("Введите индекс удаляемого сотрудника: ");
+            index = Convert.ToInt32(Console.ReadLine());
+            fullNames = DeleteArrayElement(fullNames, index-1);
+            jobTitles = DeleteArrayElement(jobTitles, index-1);
+
+            if (arrayLength == fullNames.Length)
+                Console.WriteLine($"Не удалось удалить сотрудника с индексом {index}");
+            else
+                Console.WriteLine($"Сотрудник с индексом {index} был успешно удалён");
+        }
+
+        static void FindAccounts(string[] fullNames, string[] jobTitles)
+        {
+            string surname;
+
+            Console.WriteLine("Введите фамилию: ");
+            surname = Console.ReadLine();
+
+            for (int i = 0;i < fullNames.Length;i++)
             {
-                if (isExist == false)
-                {
-                    Account NewAccount = new Account();
-                    Console.Write("Введите Фамилию: ");
-                    NewAccount.LastName = Console.ReadLine();
-                    Console.Write("Введите Имя: ");
-                    NewAccount.FirstName = Console.ReadLine();
-                    Console.Write("Введите Отчество: ");
-                    NewAccount.FatherName = Console.ReadLine();
-                    Console.Write("Введите должность: ");
-                    jobTitle = Console.ReadLine();
-                    jobTitleIndex = jobTitles.IndexOf(jobTitle);
+                if(fullNames[i].Split(' ')[0].ToLower() == surname.ToLower())
+                    Console.WriteLine($"{i+1} {fullNames[i]} - {jobTitles[i]}");    
+            }
+        }
 
-                    if(jobTitleIndex == -1)
-                    {
-                        NewAccount.JobTitleIndex = jobTitles.Count;
-                        jobTitles.Add(jobTitle);                
-                    }
+        static string[] AddArrayElement(string[] array, string element)
+        {
+            string[] tempArray = new string[array.Length + 1];
+
+            for (int i = 0; i < array.Length; i++)
+                tempArray[i] = array[i];
+
+            tempArray[array.Length] = element;
+            return tempArray;
+        }
+
+        private static string[] DeleteArrayElement(string[] array, int index)
+        {
+            if (index >= 0 && index < array.Length)
+            {
+                string[] tempArray = new string[array.Length - 1];
+
+                for (int i = 0; i < tempArray.Length; i++)
+                    if (i < index)
+                        tempArray[i] = array[i];
                     else
-                    {
-                        NewAccount.JobTitleIndex = jobTitleIndex;
-                    }
-                                        
-                    accounts.Add(accountIndex, NewAccount);
-                }
-                else
-                {
-                    Console.WriteLine("Досье с таким номером уже существует");
-                }
-            }
-        }
+                        tempArray[i] = array[i + 1];
 
-        static void PrintAccounts(Dictionary<int, Account> accounts, List<string> jobTitles)
-        {
-            foreach (var account in accounts)
-            {
-                Console.WriteLine($"{account.Key} {account.Value.LastName} {account.Value.FirstName} {account.Value.FatherName} - {jobTitles[account.Value.JobTitleIndex]}");
+                array = tempArray;
             }
-        }
 
-        static void DeleteAccount(Dictionary<int, Account> accounts)
-        {
-            int accountIndex = GetAccountIndex(accounts, out bool isCorrect, out bool isExist);
-
-            if (isExist)
-            {
-                accounts.Remove(accountIndex);
-            }
-            else
-            {
-                Console.WriteLine("Не существует досье с таким номером");
-            }
-        }
-
-        static int GetAccountIndex(Dictionary<int, Account> accounts, out bool isCorrect, out bool isExist)
-        {
-            int accountIndex;
-            Console.Write("Введите номер досье: ");
-            isCorrect = Int32.TryParse(Console.ReadLine(), out accountIndex);
-
-            if (isCorrect)
-            {
-                isExist = accounts.TryGetValue(accountIndex, out var account);
-                return accountIndex;
-            }
-            else
-            {
-                Console.WriteLine("Неверно указан номер досье");
-                isExist = false;
-                return 0;
-            }
+            return array;
         }
     }
 }
