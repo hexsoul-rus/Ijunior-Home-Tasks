@@ -11,40 +11,29 @@ namespace Task37MergingCollections
             string[] strings2 = new string[] { "4", "7", "2", "3", "2" };
             List<string> mergedStrings = new();
 
-            foreach (string item in strings1) 
-                Console.Write(item + " ");
-
-            Console.Write( " + ");
-
-            foreach (string item in strings2) 
-                Console.Write(item + " ");
-
+            WriteCollectionToConsole(strings1);
+            Console.Write(" + ");
+            WriteCollectionToConsole(strings2);
             AddUniqueStrings(strings1, mergedStrings);
             AddUniqueStrings(strings2, mergedStrings);
             Console.Write(" => ");
+            WriteCollectionToConsole(mergedStrings.ToArray());
+        }
 
-            foreach (var item in mergedStrings)  
+        private static void WriteCollectionToConsole(string[] strings)
+        {
+
+            foreach (string item in strings)
                 Console.Write(item + " ");
         }
 
-        static void AddUniqueStrings(string[] targetStrings, List<string> uniqueStrings)
+        static void AddUniqueStrings(String[] targetStrings, List<string> uniqueStrings)
         {
-            for (int i = 0; i < targetStrings.Length; i++)
-            {
-                bool isUnique = true;
-
-                foreach (string item in uniqueStrings)
+            foreach(string item in targetStrings)
+            { 
+                if (uniqueStrings.Contains(item) == false)
                 {
-                    if (item == targetStrings[i])
-                    {
-                        isUnique = false;
-                        break;
-                    }
-                }
-
-                if (isUnique)
-                {
-                    uniqueStrings.Add(targetStrings[i]);
+                    uniqueStrings.Add(item);
                 }
             }
         }
