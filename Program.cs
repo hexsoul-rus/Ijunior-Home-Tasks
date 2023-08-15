@@ -30,12 +30,8 @@ namespace Task37MergingCollections
         static void AddUniqueStrings(String[] targetStrings, List<string> uniqueStrings)
         {
             foreach(string item in targetStrings)
-            { 
                 if (uniqueStrings.Contains(item) == false)
-                {
                     uniqueStrings.Add(item);
-                }
-            }
         }
     }
 }
