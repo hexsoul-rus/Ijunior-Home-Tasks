@@ -74,14 +74,14 @@ namespace Task36ExtendedAccounting
                     jobTitle = Console.ReadLine();
                     jobTitleIndex = jobTitles.IndexOf(jobTitle);
 
-                    if(jobTitleIndex != -1)
+                    if(jobTitleIndex == -1)
                     {
-                        NewAccount.JobTitleIndex = jobTitleIndex;
+                        NewAccount.JobTitleIndex = jobTitles.Count;
+                        jobTitles.Add(jobTitle);                
                     }
                     else
                     {
-                        jobTitles.Add(jobTitle);
-                        NewAccount.JobTitleIndex = jobTitles.Count - 1;
+                        NewAccount.JobTitleIndex = jobTitleIndex;
                     }
                                         
                     accounts.Add(accountIndex, NewAccount);
