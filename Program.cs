@@ -4,7 +4,7 @@ namespace Task38PlayerClass
 {
     public class Player
     {
-        private readonly string _name = "player";
+        private readonly string _name = "Player";
         private int _health = 100;
 
         public Player(string name, int health)
@@ -15,7 +15,7 @@ namespace Task38PlayerClass
                 _health = health;
         }
 
-        public void ShowPlayerInfo()
+        public void ShowInfo()
         {
             Console.WriteLine($"Имя игрока: {_name}, колличество жизней: {_health}");
         }
@@ -26,7 +26,7 @@ namespace Task38PlayerClass
         static void Main()
         {
             Player player = new("Vasya", 150);
-            player.ShowPlayerInfo();
+            player.ShowInfo();
         }
     }
 }
