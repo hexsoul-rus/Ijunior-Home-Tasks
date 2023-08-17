@@ -11,6 +11,8 @@ namespace Task39Properties
 
     public class Player : IUnit
     {
+        public int XPosition { get; private set; }
+        public int YPosition { get; private set; }
         public char View
         {
             get
@@ -23,8 +25,7 @@ namespace Task39Properties
                     _view = value;
             }
         }
-        public int XPosition { get; private set; }
-        public int YPosition { get; private set; }
+
         private char _view = '@';
         private char _fieldView = ' ';
 
