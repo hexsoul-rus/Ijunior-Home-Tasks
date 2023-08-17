@@ -19,7 +19,7 @@ namespace Task39Properties
             {
                 return _view;
             }
-            private set
+            set
             {
                 if (value != _fieldView)
                     _view = value;
