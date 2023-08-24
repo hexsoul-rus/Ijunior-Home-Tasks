@@ -8,6 +8,7 @@ namespace Task40PlayersDataBase
     {
         public string Name;
         public bool IsBanned;
+
         public PlayerData(string name) 
         { 
             Name = name;
@@ -17,7 +18,7 @@ namespace Task40PlayersDataBase
 
     public class DataBase
     {
-        private Dictionary<int, PlayerData> _players = new ();
+        private readonly Dictionary<int, PlayerData> _players = new ();
         private int _lastId = 0;
 
         public void AddNewPlayer(string name)
@@ -27,16 +28,22 @@ namespace Task40PlayersDataBase
             _players.Add(_lastId, player);
         }
 
-        public void SetBan(int id, bool ban)
+        public void SetBan(int id, bool isBanned)
         {
-            var player = _players[id];
-            player.IsBanned = ban;
-            _players[id] = player;
+            if (FindID(id))
+            {
+                var player = _players[id];
+                player.IsBanned = isBanned;
+                _players[id] = player;
+            }
         }
 
         public void RemovePlayer(int id)
         {
-            _players.Remove(id);
+            if (FindID(id))
+            {
+                _players.Remove(id);
+            }
         }
 
         public Dictionary<int, PlayerData> GetPlayers()
@@ -50,6 +57,19 @@ namespace Task40PlayersDataBase
             }
 
             return players;
+        }
+
+        private bool FindID(int id)
+        {
+            if (_players.ContainsKey(id))
+            {
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"пользователя с таким ID не существует");
+                return false;
+            }
         }
     }
 
@@ -75,7 +95,7 @@ namespace Task40PlayersDataBase
             return Console.ReadLine();
         }
 
-        private static void ShowplayersInfo(DataBase playersData)
+        private static void ShowPlayersInfo(DataBase playersData)
         {
             var players = playersData.GetPlayers();
 
@@ -87,7 +107,7 @@ namespace Task40PlayersDataBase
 
         static void Main()
         {
-            DataBase playersData = new DataBase();
+            DataBase playersData = new();
             bool isRunning = true;
 
             while (isRunning)
@@ -120,12 +140,16 @@ namespace Task40PlayersDataBase
                         break;
 
                     case CommandShowPlayer:
-                        ShowplayersInfo(playersData);
+                        ShowPlayersInfo(playersData);
                         break;
 
                     case CommandExit:
                         isRunning = false;
                         Console.WriteLine("Завершение работы программы");
+                        break;
+
+                    default:
+                        Console.WriteLine("Неверно выбрано действие");
                         break;
                 }
 
