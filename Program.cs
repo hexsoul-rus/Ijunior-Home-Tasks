@@ -1,113 +1,116 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Task40PlayersDataBase
 {
-    public struct PlayerData
+    internal class Program
     {
-        public string Name;
-        public bool IsBanned;
-
-        public PlayerData(string name) 
-        { 
-            Name = name;
-            IsBanned = false;
+        static void Main()
+        {
+            ConsoleControl consoleControl = new ();
+            consoleControl.Command();
         }
     }
 
-    public class DataBase
+    public class Player
     {
-        private readonly Dictionary<int, PlayerData> _players = new ();
+        public readonly int Id;
+        public string Name {get; private set;}
+        public bool IsBanned {get; private set;}
+
+        public Player(int id, string name) 
+        { 
+            Name = name;
+            IsBanned = false;
+            Id = id;
+        }
+
+        public Player(int id, string name, bool isBanned)
+        {
+            Name = name;
+            IsBanned = isBanned;
+            Id = id;
+        }
+
+        internal Player Clone()
+        {
+            return new Player(Id,Name,IsBanned);
+        }
+
+        public void Ban()
+        {
+            IsBanned=true;
+        }
+
+        public void Unbun()
+        {
+            IsBanned=false;
+        }
+    }
+
+    public class Database
+    {
+        public readonly List<Player> Players = new ();
         private int _lastId = 0;
 
-        public void AddNewPlayer(string name)
+        public void AddNewPlayer()
         {
-            PlayerData player = new (name);
+            Console.WriteLine("Введите имя игрока");
+            string name = Console.ReadLine();
             _lastId++;
-            _players.Add(_lastId, player);
+            Player player = new(_lastId, name);
+            Players.Add(player);
         }
 
-        public void SetBan(int id, bool isBanned)
+        public void RemovePlayer(Player player)
         {
-            if (FindID(id))
-            {
-                var player = _players[id];
-                player.IsBanned = isBanned;
-                _players[id] = player;
-            }
+            Players.Remove(player);
         }
 
-        public void RemovePlayer(int id)
+        public List<Player> GetPlayers()
         {
-            if (FindID(id))
-            {
-                _players.Remove(id);
-            }
-        }
+            List<Player> players = new();
 
-        public Dictionary<int, PlayerData> GetPlayers()
-        {
-            Dictionary<int, PlayerData> players = new();
-
-            foreach (int id in _players.Keys)
+            foreach (Player player in Players)
             {
-                PlayerData player = _players[id];
-                players.Add(id, player);
+                Player clonedPlayer = (Player) player.Clone();
+                players.Add(clonedPlayer);
             }
 
             return players;
         }
-
-        private bool FindID(int id)
-        {
-            if (_players.ContainsKey(id))
-            {
-                return true;
-            }
-            else
-            {
-                Console.WriteLine($"пользователя с таким ID не существует");
-                return false;
-            }
-        }
     }
 
-    internal class Program
+class ConsoleControl
     {
-        const char CommandAddPlayer = '1';
-        const char CommandBanPlayer = '2';
-        const char CommandUnbanPlayer = '3';
-        const char CommandDeletePlayer = '4';
-        const char CommandShowPlayer = '5';
-        const char CommandExit = '6';
-
-        private static int GetId()
+        private Player GetPlayer(Database playersData)
         {
-            Console.WriteLine("Введите ID: ");
+            Console.WriteLine("Введите id: ");
             Int32.TryParse(Console.ReadLine(), out int id);
-            return id;
+            return playersData.Players.FirstOrDefault(player => player.Id == id);
         }
 
-        private static string GetName()
-        {
-            Console.WriteLine("Введите имя игрока");
-            return Console.ReadLine();
-        }
-
-        private static void ShowPlayersInfo(DataBase playersData)
+        private void ShowPlayersInfo(Database playersData)
         {
             var players = playersData.GetPlayers();
 
-            foreach (int id in players.Keys)
+            foreach (Player player in players)
             {
-                Console.WriteLine($"{id} - name:{players[id].Name} ban:{players[id].IsBanned}");
+                Console.WriteLine($"{player.Id} - name:{player.Name} ban:{player.IsBanned}");
             }
         }
 
-        static void Main()
+        public void Command()
         {
-            DataBase playersData = new();
+            const char CommandAddPlayer = '1';
+            const char CommandBanPlayer = '2';
+            const char CommandUnbanPlayer = '3';
+            const char CommandDeletePlayer = '4';
+            const char CommandShowPlayer = '5';
+            const char CommandExit = '6';
+            Database playersData = new();
             bool isRunning = true;
 
             while (isRunning)
@@ -120,23 +123,20 @@ namespace Task40PlayersDataBase
                 switch (key)
                 {
                     case CommandAddPlayer:
-                        string name = GetName();
-                        playersData.AddNewPlayer(name);
+                        playersData.AddNewPlayer();
                         break;
 
                     case CommandBanPlayer:
-                        int id = GetId();
-                        playersData.SetBan(id, true);
+                        GetPlayer(playersData)?.Ban();
                         break;
 
                     case CommandUnbanPlayer:
-                        id = GetId();
-                        playersData.SetBan(id, false);
+                        GetPlayer(playersData)?.Unbun();
                         break;
 
                     case CommandDeletePlayer:
-                        id = GetId();
-                        playersData.RemovePlayer(id);
+                        Player player = GetPlayer(playersData);
+                        playersData.RemovePlayer(player);
                         break;
 
                     case CommandShowPlayer:
@@ -145,7 +145,6 @@ namespace Task40PlayersDataBase
 
                     case CommandExit:
                         isRunning = false;
-                        Console.WriteLine("Завершение работы программы");
                         break;
 
                     default:
