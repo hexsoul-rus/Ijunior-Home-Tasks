@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace Task40PlayersDataBase
 {
@@ -10,7 +9,7 @@ namespace Task40PlayersDataBase
         static void Main()
         {
             ConsoleControl consoleControl = new ();
-            consoleControl.Command();
+            consoleControl.Run();
         }
     }
 
@@ -27,18 +26,6 @@ namespace Task40PlayersDataBase
             Id = id;
         }
 
-        public Player(int id, string name, bool isBanned)
-        {
-            Name = name;
-            IsBanned = isBanned;
-            Id = id;
-        }
-
-        internal Player Clone()
-        {
-            return new Player(Id,Name,IsBanned);
-        }
-
         public void Ban()
         {
             IsBanned=true;
@@ -48,28 +35,33 @@ namespace Task40PlayersDataBase
         {
             IsBanned=false;
         }
+
+        internal Player Clone()
+        {
+            Player clonedPlayer = new(Id, Name);
+            clonedPlayer.IsBanned = IsBanned;
+            return clonedPlayer;
+        }
     }
 
     public class Database
     {
-        public readonly List<Player> Players = new ();
         private int _lastId = 0;
+        private readonly List<Player> Players = new ();
 
-        public void AddNewPlayer()
+        public void Add(string name)
         {
-            Console.WriteLine("Введите имя игрока");
-            string name = Console.ReadLine();
             _lastId++;
             Player player = new(_lastId, name);
             Players.Add(player);
         }
 
-        public void RemovePlayer(Player player)
+        public void Remove(Player player)
         {
             Players.Remove(player);
         }
 
-        public List<Player> GetPlayers()
+        public List<Player> GetAll()
         {
             List<Player> players = new();
 
@@ -81,28 +73,57 @@ namespace Task40PlayersDataBase
 
             return players;
         }
+
+        public Player Find(int id)
+        {
+            return Players.FirstOrDefault(player => player.Id == id);
+        }
     }
 
 class ConsoleControl
     {
-        private Player GetPlayer(Database playersData)
+        private Player GetPlayer(Database players)
         {
             Console.WriteLine("Введите id: ");
             Int32.TryParse(Console.ReadLine(), out int id);
-            return playersData.Players.FirstOrDefault(player => player.Id == id);
+            Player player = players.Find(id);
+
+            if (player == null)
+            {
+                Console.WriteLine("Введён некорректный id");
+            }
+
+            return player;
         }
 
-        private void ShowPlayersInfo(Database playersData)
+        private void ShowPlayersInfo(Database players)
         {
-            var players = playersData.GetPlayers();
+            List<Player> allPlayers = players.GetAll();
 
-            foreach (Player player in players)
+            foreach (Player player in allPlayers)
             {
                 Console.WriteLine($"{player.Id} - name:{player.Name} ban:{player.IsBanned}");
             }
         }
 
-        public void Command()
+        private void AddPlayer(Database players)
+        {
+            Console.WriteLine("Введите имя игрока");
+            string name = Console.ReadLine();
+            players.Add(name);
+        }
+
+        private void RemovePlayer(Database players)
+        {
+            Player player = GetPlayer(players);
+
+            if (player != null)
+            {
+                players.Remove(player);
+            }
+        }
+
+        public void Run()
         {
             const char CommandAddPlayer = '1';
             const char CommandBanPlayer = '2';
@@ -110,7 +131,7 @@ class ConsoleControl
             const char CommandDeletePlayer = '4';
             const char CommandShowPlayer = '5';
             const char CommandExit = '6';
-            Database playersData = new();
+            Database players = new();
             bool isRunning = true;
 
             while (isRunning)
@@ -123,24 +144,23 @@ class ConsoleControl
                 switch (key)
                 {
                     case CommandAddPlayer:
-                        playersData.AddNewPlayer();
+                        AddPlayer(players);
                         break;
 
                     case CommandBanPlayer:
-                        GetPlayer(playersData)?.Ban();
+                        GetPlayer(players)?.Ban();
                         break;
 
                     case CommandUnbanPlayer:
-                        GetPlayer(playersData)?.Unbun();
+                        GetPlayer(players)?.Unbun();
                         break;
 
                     case CommandDeletePlayer:
-                        Player player = GetPlayer(playersData);
-                        playersData.RemovePlayer(player);
+                        RemovePlayer(players);
                         break;
 
                     case CommandShowPlayer:
-                        ShowPlayersInfo(playersData);
+                        ShowPlayersInfo(players);
                         break;
 
                     case CommandExit:
