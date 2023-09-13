@@ -27,10 +27,10 @@ namespace Task40PlayersDataBase
 
         private int _id;
 
-        public Player(int id, string name, bool isBanned = false) 
+        public Player(int id, string name) 
         { 
             Name = name;
-            IsBanned = isBanned;
+            IsBanned = false;
             _id = id;
         }
 
@@ -43,46 +43,40 @@ namespace Task40PlayersDataBase
         {
             IsBanned=false;
         }
-
-        internal Player Clone()
-        {
-            return new Player(_id, Name, IsBanned); 
-        }
     }
 
     public class Database
     {
+        public List<Player> Players { get; private set; } = new List<Player>();
         private int _lastId = 0;
-        private List<Player> _players = new List<Player>();
 
         public void Add(string name)
         {
             _lastId++;
             Player player = new Player(_lastId, name);
-            _players.Add(player);
+            Players.Add(player);
         }
 
         public void Remove(Player player)
         {
-            _players.Remove(player);
+            Players.Remove(player);
         }
 
         public List<Player> GetAll()
         {
-            List<Player> players = new List<Player>();
+            List<Player> allPlayers = new List<Player>();
 
-            foreach (Player player in _players)
+            foreach (Player player in Players)
             {
-                Player clonedPlayer = (Player) player.Clone();
-                players.Add(clonedPlayer);
+                allPlayers.Add(player);
             }
 
-            return players;
+            return allPlayers;
         }
 
         public Player Find(int id)
         {
-            return _players.FirstOrDefault(player => player.Id == id);
+            return Players.FirstOrDefault(player => player.Id == id);
         }
     }
 
