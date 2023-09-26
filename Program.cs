@@ -15,23 +15,23 @@ namespace Task40PlayersDataBase
 
     public class Player
     {
-        public string Name {get; private set;}
-        public bool IsBanned {get; private set;}
+        public string Name { get; private set; }
+        public bool IsBanned { get; private set; }
+        private int _id;
+
+        public Player(int id, string name)
+        {
+            Name = name;
+            IsBanned = false;
+            _id = id;
+        }
+
         public int Id 
         { 
             get 
             { 
                 return _id; 
             } 
-        }
-
-        private int _id;
-
-        public Player(int id, string name) 
-        { 
-            Name = name;
-            IsBanned = false;
-            _id = id;
         }
 
         public void Ban()
@@ -47,26 +47,26 @@ namespace Task40PlayersDataBase
 
     public class Database
     {
-        public List<Player> Players { get; private set; } = new List<Player>();
+        private List<Player> _players = new List<Player>();
         private int _lastId = 0;
 
         public void Add(string name)
         {
             _lastId++;
             Player player = new Player(_lastId, name);
-            Players.Add(player);
+            _players.Add(player);
         }
 
         public void Remove(Player player)
         {
-            Players.Remove(player);
+            _players.Remove(player);
         }
 
         public List<Player> GetAll()
         {
             List<Player> allPlayers = new List<Player>();
 
-            foreach (Player player in Players)
+            foreach (Player player in _players)
             {
                 allPlayers.Add(player);
             }
@@ -76,7 +76,7 @@ namespace Task40PlayersDataBase
 
         public Player Find(int id)
         {
-            return Players.FirstOrDefault(player => player.Id == id);
+            return _players.FirstOrDefault(player => player.Id == id);
         }
     }
 
@@ -84,12 +84,12 @@ class ConsoleControl
     {
         public void Run()
         {
-            const char CommandAddPlayer = '1';
-            const char CommandBanPlayer = '2';
-            const char CommandUnbanPlayer = '3';
-            const char CommandDeletePlayer = '4';
-            const char CommandShowPlayer = '5';
-            const char CommandExit = '6';
+            const string CommandAddPlayer = "1";
+            const string CommandBanPlayer = "2";
+            const string CommandUnbanPlayer = "3";
+            const string CommandDeletePlayer = "4";
+            const string CommandShowPlayer = "5";
+            const string CommandExit = "6";
 
             Database players = new Database();
             bool isRunning = true;
@@ -98,7 +98,7 @@ class ConsoleControl
             {
                 Console.WriteLine($"выберите действие:\n{CommandAddPlayer}-добавить игрока\n{CommandBanPlayer}-забанить игрока\n" +
                     $"{CommandUnbanPlayer}-разбанить игрока\n{CommandDeletePlayer}-удалить игрока\n{CommandShowPlayer}-вывести всех игроков\n{CommandExit}-выход");
-                char key = Console.ReadKey().KeyChar;
+                string key = Console.ReadLine();
                 Console.WriteLine();
 
                 switch (key)
