@@ -15,24 +15,16 @@ namespace Task40PlayersDataBase
 
     public class Player
     {
-        public string Name { get; private set; }
-        public bool IsBanned { get; private set; }
-        private int _id;
-
         public Player(int id, string name)
         {
             Name = name;
             IsBanned = false;
-            _id = id;
+            Id = id;
         }
 
-        public int Id 
-        { 
-            get 
-            { 
-                return _id; 
-            } 
-        }
+        public string Name { get; private set; }
+        public bool IsBanned { get; private set; }
+        public int Id { get; private set; }
 
         public void Ban()
         {
@@ -91,7 +83,7 @@ class ConsoleControl
             const string CommandShowPlayer = "5";
             const string CommandExit = "6";
 
-            Database players = new Database();
+            Database Database = new Database();
             bool isRunning = true;
 
             while (isRunning)
@@ -104,23 +96,23 @@ class ConsoleControl
                 switch (key)
                 {
                     case CommandAddPlayer:
-                        AddPlayer(players);
+                        AddPlayer(Database);
                         break;
 
                     case CommandBanPlayer:
-                        TryGetPlayer(players)?.Ban();
+                        TryGetPlayer(Database)?.Ban();
                         break;
 
                     case CommandUnbanPlayer:
-                        TryGetPlayer(players)?.Unban();
+                        TryGetPlayer(Database)?.Unban();
                         break;
 
                     case CommandDeletePlayer:
-                        RemovePlayer(players);
+                        RemovePlayer(Database);
                         break;
 
                     case CommandShowPlayer:
-                        ShowPlayersInfo(players);
+                        ShowPlayersInfo(Database);
                         break;
 
                     case CommandExit:
@@ -138,11 +130,11 @@ class ConsoleControl
             }
         }
 
-        private Player TryGetPlayer(Database players)
+        private Player TryGetPlayer(Database Database)
         {
             Console.WriteLine("Введите id: ");
             Int32.TryParse(Console.ReadLine(), out int id);
-            Player player = players.Find(id);
+            Player player = Database.Find(id);
 
             if (player == null)
             {
@@ -152,9 +144,9 @@ class ConsoleControl
             return player;
         }
 
-        private void ShowPlayersInfo(Database players)
+        private void ShowPlayersInfo(Database Database)
         {
-            List<Player> allPlayers = players.GetAll();
+            List<Player> allPlayers = Database.GetAll();
 
             foreach (Player player in allPlayers)
             {
@@ -162,20 +154,20 @@ class ConsoleControl
             }
         }
 
-        private void AddPlayer(Database players)
+        private void AddPlayer(Database Database)
         {
             Console.WriteLine("Введите имя игрока");
             string name = Console.ReadLine();
-            players.Add(name);
+            Database.Add(name);
         }
 
-        private void RemovePlayer(Database players)
+        private void RemovePlayer(Database Database)
         {
-            Player player = TryGetPlayer(players);
+            Player player = TryGetPlayer(Database);
 
             if (player != null)
             {
-                players.Remove(player);
+                Database.Remove(player);
             }
         }
     }
