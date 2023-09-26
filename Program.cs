@@ -83,7 +83,7 @@ class ConsoleControl
             const string CommandShowPlayer = "5";
             const string CommandExit = "6";
 
-            Database Database = new Database();
+            Database database = new Database();
             bool isRunning = true;
 
             while (isRunning)
@@ -96,23 +96,23 @@ class ConsoleControl
                 switch (key)
                 {
                     case CommandAddPlayer:
-                        AddPlayer(Database);
+                        AddPlayer(database);
                         break;
 
                     case CommandBanPlayer:
-                        TryGetPlayer(Database)?.Ban();
+                        TryGetPlayer(database)?.Ban();
                         break;
 
                     case CommandUnbanPlayer:
-                        TryGetPlayer(Database)?.Unban();
+                        TryGetPlayer(database)?.Unban();
                         break;
 
                     case CommandDeletePlayer:
-                        RemovePlayer(Database);
+                        RemovePlayer(database);
                         break;
 
                     case CommandShowPlayer:
-                        ShowPlayersInfo(Database);
+                        ShowPlayersInfo(database);
                         break;
 
                     case CommandExit:
@@ -130,11 +130,11 @@ class ConsoleControl
             }
         }
 
-        private Player TryGetPlayer(Database Database)
+        private Player TryGetPlayer(Database database)
         {
             Console.WriteLine("Введите id: ");
             Int32.TryParse(Console.ReadLine(), out int id);
-            Player player = Database.Find(id);
+            Player player = database.Find(id);
 
             if (player == null)
             {
@@ -144,9 +144,9 @@ class ConsoleControl
             return player;
         }
 
-        private void ShowPlayersInfo(Database Database)
+        private void ShowPlayersInfo(Database database)
         {
-            List<Player> allPlayers = Database.GetAll();
+            List<Player> allPlayers = database.GetAll();
 
             foreach (Player player in allPlayers)
             {
@@ -154,20 +154,20 @@ class ConsoleControl
             }
         }
 
-        private void AddPlayer(Database Database)
+        private void AddPlayer(Database database)
         {
             Console.WriteLine("Введите имя игрока");
             string name = Console.ReadLine();
-            Database.Add(name);
+            database.Add(name);
         }
 
-        private void RemovePlayer(Database Database)
+        private void RemovePlayer(Database database)
         {
-            Player player = TryGetPlayer(Database);
+            Player player = TryGetPlayer(database);
 
             if (player != null)
             {
-                Database.Remove(player);
+                database.Remove(player);
             }
         }
     }
